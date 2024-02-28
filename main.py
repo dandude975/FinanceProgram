@@ -8,51 +8,56 @@ import tempfile
 import subprocess
 from subprocess import run
 import Functions
+from tkinter import *
+from tkinter import ttk
 
 def startUp():
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-    )
-    mycursor = mydb.cursor()
     try:
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+        )
+        mycursor = mydb.cursor()
         mycursor.execute("CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';")  # Creating admin user
         mycursor.execute("GRANT ALL PRIVILEGES on *.* to 'admin'@'localhost'WITH GRANT OPTION;")  # Setting admin permissions
     except:
         mydb.close()
-        firstTimeAccess = False
+        return None
     else:
-        firstTimeAccess = True
         length = 12
         chars = string.ascii_letters + string.digits + '!@#$%^*&~:¬`'
         random.seed = (os.urandom(1024))
-        global secure
         secure = ''.join(random.choice(chars) for i in range(length))
 
         print("Press enter to view recover key. This is used for resetting this application.")
         print("WARNING LOSS OF RECOVERY KEY WILL RESULT IN COMPLETE LOSS OF ACCESS")
         input("[Enter]")
-        print("Recovery key: " + secure)
+        root = Tk()
+        frm = ttk.Frame(root, padding=25)
+        frm.grid()
+        ttk.Label(frm, text="Recovery key: ").grid(column=0, row=0)
+        ttk.Label(frm, text=secure).grid(column=0, row=1)
+        ttk.Button(frm, text="I have written down the key", command=root.destroy).grid(column=0, row=2)
+        root.mainloop()
         mycursor.execute("ALTER USER 'root'@'localhost' IDENTIFIED BY '" + secure + "';")
         mycursor.execute("ALTER USER 'admin'@'localhost' IDENTIFIED BY '" + secure + "';")
-        input("[Press enter to confirm you have made not of you recovery code]")
         print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
         mydb.close()
 
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="admin",
-        password=secure,
-    )
-    mycursor = mydb.cursor()
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="admin",
+            password=secure,
+        )
+        mycursor = mydb.cursor()
 
-    if firstTimeAccess == True:
         mycursor.execute("CREATE ROLE CUSTOMER;")
         mycursor.execute("GRANT ALTER,CREATE,DELETE,DROP,INSERT,REFERENCES,RELOAD,SELECT,CREATE TABLESPACE,UPDATE on"
                          "*.* to 'CUSTOMER';")
         confirmed = False
         while not confirmed:
+            print("Create an account\n")
             User = input("Enter username: ")
             Pass = input("Enter password:")
             checkPass = input("Confirm password: ")
@@ -64,13 +69,9 @@ def startUp():
         mycursor.execute("CREATE USER '" + User + "'@'localhost' IDENTIFIED BY '" + Pass + "';")  # Creating user
         mycursor.execute("GRANT 'CUSTOMER' to '" + User + "'@'localhost';")
         mycursor.execute("SET DEFAULT ROLE 'CUSTOMER' to '" + User + "'@'localhost';")
-        logOff()
+        mycursor.execute("CREATE DATABASE FinanceRecords")  # Creating database
         mydb.close()
         return None
-    else:
-        mydb.close()
-        return None
-
 
 
 def logInFunction():  # Function to log into the program
@@ -97,40 +98,6 @@ def logInFunction():  # Function to log into the program
             global mycursor
             mycursor = mydb.cursor()
             print("Welcome", Uname)
-    return None
-
-
-def logOff():  # Function to log out of the system
-    mydb.close()
-    return None
-
-
-def createUser():  # Creating the user
-
-    try:  # Connecting to SQL database with admin privilidges to create user and set user permissions
-        global mydb
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="admin",
-            password=secure,
-        )
-    except:
-        print("Error code 1001")
-        exit()
-    else:
-        logIn = True
-        global mycursor
-        mycursor = mydb.cursor()
-
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user=User,
-            password=Pass,
-        )
-        mycursor = mydb.cursor()
-        mycursor.execute("CREATE DATABASE FinanceRecords")  # Creating database
-        logOff()
-    logInFunction()
     return None
 
 

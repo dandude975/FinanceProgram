@@ -1,24 +1,8 @@
-import mysql.connector
-
-print("Please log in:")
-input("[Press enter to log in]")
-try:
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="admin",
-        password="admin",
-    )
-except:
-    print("Access denied\n")
-else:
-    mycursor = mydb.cursor()
-    print("Successfully logged in")
-
-while True:
-    print("")
-    command = input("Enter a command: ")
-    if command.lower() == "exit":
-        exit()
-    mycursor.execute(command)
-    print("Command executed")
-    print("\n\n\n")
+from tkinter import *
+from tkinter import ttk
+root = Tk()
+frm = ttk.Frame(root, padding=10)
+frm.grid()
+ttk.Label(frm, text="Hello World!").grid(column=0, row=0)
+ttk.Button(frm, text="I have written down the key", command=root.destroy).grid(column=0, row=1)
+root.mainloop()
