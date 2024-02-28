@@ -9,7 +9,7 @@ from subprocess import run
 import Functions
 
 
-def logIn():
+def logInFunction():
     global mycursor
     global mydb
     logIn = False
@@ -22,7 +22,7 @@ def logIn():
                 host="localhost",
                 user=Uname,
                 password=Pword,
-                database="FinanceRecords"
+                database="financerecords"
             )
         except:
             print("Incorrect username or password\n")
@@ -32,6 +32,7 @@ def logIn():
             password = Pword
             global mycursor
             mycursor = mydb.cursor()
+            print("Welcome", Uname)
     return None
 
 
@@ -40,40 +41,65 @@ def logOff():
     return None
 
 
-def createUser():
+def createUser():  # Creating the user
     confirmed = False
     while not confirmed:
         User = input("Enter username: ")
         Pass = input("Enter password:")
         checkPass = input("Confirm password: ")
-        if Pass == checkPass:
+        if Pass == checkPass:  # Check that passwords match
             print()
             confirmed = True
         else:
             print("Passwords do not match")
-    statement = "CREATE USER '" + User + "'@'localhost' IDENTIFIED BY '" + Pass + "'"
-    mycursor.execute(statement)
-    print("Welcome", User)
-    mycursor.execute("CREATE DATABASE FinanceRecords")
-    logOff()
-    return logIn()
+    try:  # Connecting to SQL database with admin privilidges to create user
+        global mydb
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+        )
+    except:
+        print("Error code 1001")
+        exit()
+    else:
+        logIn = True
+        global mycursor
+        mycursor = mydb.cursor()
+        mycursor.execute("CREATE USER '" + User + "'@'localhost' IDENTIFIED BY '" + Pass + "';")  # Creating user
+        mycursor.execute("CREATE ROLE CUSTOMER;")
+        mycursor.execute("GRANT ALTER,CREATE,DELETE,DROP,INSERT,REFERENCES,RELOAD,SELECT,CREATE TABLESPACE,UPDATE on"
+                         "*.* to 'CUSTOMER';")
+        mycursor.execute("GRANT 'CUSTOMER' to '"+User+"'@'localhost';")
+        mycursor.execute("SET DEFAULT ROLE 'CUSTOMER' to '"+User+"'@'localhost';")
+        logOff()
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user=User,
+            password=Pass,
+        )
+        mycursor = mydb.cursor()
+        mycursor.execute("CREATE DATABASE FinanceRecords")  # Creating database
+        logOff()
+    logInFunction()
+    return None
 
 
 print("Hello and welcome to Omega Financial Services")
-print("A company by RETIS Engineering")
+print("A company by RETIS Software Inc")
 print()
 access = False
 while not access:
     print("Log in or Sign up?")
     x = input("(L/S): ")
-    if x.lower == 'l':
-        logIn()
+    if x.lower() == "l":
+        logInFunction()
         access = True
-    elif x.lower == 's':
+    elif x.lower() == "s":
         createUser()
         access = True
     else:
-        print()
+        print("nope")
 
 print("\nRecorded years:")
 mycursor.execute("SHOW TABLES")

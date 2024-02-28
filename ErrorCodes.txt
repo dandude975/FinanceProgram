@@ -1,0 +1,3 @@
+Error code list
+
+1001: Failed to log in with user creation privilidges
