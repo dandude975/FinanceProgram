@@ -12,7 +12,7 @@ from tkinter import *
 from tkinter import ttk
 
 def startUp():
-    try:
+    try:  # If the program can access the root user with defaults, then it will initiate 'first time' procedures.
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
