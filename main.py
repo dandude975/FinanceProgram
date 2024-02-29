@@ -8,8 +8,34 @@ import tempfile
 import subprocess
 from subprocess import run
 import Functions
+import tkinter as tk
 from tkinter import *
 from tkinter import ttk
+
+def handle_keypress(event):
+    global frm
+    frm.destroy()
+    frm = ttk.Frame(window, padding=25)
+    frm.grid()
+    label1 = tk.Label(frm, text="Hello and welcome to Omega Financial Services").grid(column=0, row=0)
+    label2 = tk.Label(frm, text="A company by RETIS Software Inc").grid(column=0, row=1)
+    label3 = tk.Label(frm, text="\n").grid(column=0, row=2)
+    label4 = tk.Label(frm, text="Loading...").grid(column=0, row=3)
+
+
+def handle_wait(event):
+    time.sleep(5)
+    global frm
+    frm.destroy()
+    frm = ttk.Frame(window, padding=25)
+    frm.grid()
+    button1 = tk.Button(frm, text="Click here to view recover key. ", command=lambda:[popOut()]).grid(column=0, row=0)
+    label1 = tk.Label(frm, text="This is used for resetting this application.").grid(column=0, row=1)
+    label2 = tk.Label(frm, text="\n").grid(column=0, row=2)
+    label3 = tk.Label(frm, text="WARNING LOSS OF RECOVERY KEY WILL RESULT IN COMPLETE LOSS OF ACCESS").grid(column=0, row=3)
+
+def popOut():
+    startUp()
 
 def startUp():
     try:  # If the program can access the root user with defaults, then it will initiate 'first time' procedures.
@@ -30,9 +56,6 @@ def startUp():
         random.seed = (os.urandom(1024))
         secure = ''.join(random.choice(chars) for i in range(length))
 
-        print("Press enter to view recover key. This is used for resetting this application.")
-        print("WARNING LOSS OF RECOVERY KEY WILL RESULT IN COMPLETE LOSS OF ACCESS")
-        input("[Enter]")
         root = Tk()
         frm = ttk.Frame(root, padding=25)
         frm.grid()
@@ -42,7 +65,6 @@ def startUp():
         root.mainloop()
         mycursor.execute("ALTER USER 'root'@'localhost' IDENTIFIED BY '" + secure + "';")
         mycursor.execute("ALTER USER 'admin'@'localhost' IDENTIFIED BY '" + secure + "';")
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
         mydb.close()
 
         mydb = mysql.connector.connect(
@@ -99,21 +121,21 @@ def logInFunction():  # Function to log into the program
             print("Welcome", Uname)
     return None
 
-main = Tk()
-frm = ttk.Frame(main, padding=25)
+window = Tk()
+window.title("Omega Financial Services")
+frm = ttk.Frame(window, padding=25)
 frm.grid()
-introA = ttk.Label(frm, text="Hello and welcome to Omega Financial Services").grid(column=0, row=0)
-intorB = ttk.Label(frm, text="A company by RETIS Software Inc").grid(column=0, row=1)
-space = ttk.Label(frm, text="\n").grid(column=0, row=2)
-loading = ttk.Label(frm, text="Loading...").grid(column=0, row=3)
-time.sleep(5)
-loading.delete()
-text = ttk.Label(frm, text="Please log in:").grid(column=0, row=3)
-main.mainloop()
+label1 = tk.Label(frm, text="Hello and welcome to Omega Financial Services").grid(column=0, row=0)
+label2 = tk.Label(frm, text="A company by RETIS Software Inc").grid(column=0, row=1)
+label3 = tk.Label(frm, text="\n").grid(column=0, row=2)
+label4 = tk.Label(frm, text="Click here to continue").grid(column=0, row=3)
 
+window.bind("<Button>", handle_keypress)
+window.bind("<ButtonRelease>", handle_wait)
+
+window.mainloop()
 
 print()
-startUp()
 access = False
 while not access:
     print("Please log in:")
