@@ -11,31 +11,22 @@ import Functions
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
+from PyQt5.QtWidgets import QApplication, QLabel
+
+
+  # FUTURE DAN!!!! Your next task is to migrate this entire program from Tkinter which is useless to PyQt5
+
 
 def handle_keypress(event):
     global frm
     frm.destroy()
     frm = ttk.Frame(window, padding=25)
     frm.grid()
-    label1 = tk.Label(frm, text="Hello and welcome to Omega Financial Services").grid(column=0, row=0)
-    label2 = tk.Label(frm, text="A company by RETIS Software Inc").grid(column=0, row=1)
-    label3 = tk.Label(frm, text="\n").grid(column=0, row=2)
-    label4 = tk.Label(frm, text="Loading...").grid(column=0, row=3)
-
-
-def handle_wait(event):
-    time.sleep(5)
-    global frm
-    frm.destroy()
-    frm = ttk.Frame(window, padding=25)
-    frm.grid()
-    button1 = tk.Button(frm, text="Click here to view recover key. ", command=lambda:[popOut()]).grid(column=0, row=0)
+    button1 = tk.Button(frm, text="Click here to view recover key. ", command=startUp()).grid(column=0, row=0)
     label1 = tk.Label(frm, text="This is used for resetting this application.").grid(column=0, row=1)
     label2 = tk.Label(frm, text="\n").grid(column=0, row=2)
-    label3 = tk.Label(frm, text="WARNING LOSS OF RECOVERY KEY WILL RESULT IN COMPLETE LOSS OF ACCESS").grid(column=0, row=3)
+    label3 = tk.Label(frm, text="WARNING LOSS OF RECOVERY KEY WILL RESULT IN COMPLETE LOSS OF ACCESS").grid(column=0,row=3)
 
-def popOut():
-    startUp()
 
 def startUp():
     try:  # If the program can access the root user with defaults, then it will initiate 'first time' procedures.
@@ -61,8 +52,9 @@ def startUp():
         frm.grid()
         ttk.Label(frm, text="Recovery key: ").grid(column=0, row=0)
         ttk.Label(frm, text=secure).grid(column=0, row=1)
-        ttk.Button(frm, text="I have written down the key", command=root.destroy).grid(column=0, row=2)
+        ttk.Button(frm, text="I have written down the key", command=lambda:[root.destroy(),window.destroy()].grid(column=0, row=2))
         root.mainloop()
+        window.mainloop()
         mycursor.execute("ALTER USER 'root'@'localhost' IDENTIFIED BY '" + secure + "';")
         mycursor.execute("ALTER USER 'admin'@'localhost' IDENTIFIED BY '" + secure + "';")
         mydb.close()
@@ -128,13 +120,11 @@ frm.grid()
 label1 = tk.Label(frm, text="Hello and welcome to Omega Financial Services").grid(column=0, row=0)
 label2 = tk.Label(frm, text="A company by RETIS Software Inc").grid(column=0, row=1)
 label3 = tk.Label(frm, text="\n").grid(column=0, row=2)
-label4 = tk.Label(frm, text="Click here to continue").grid(column=0, row=3)
+label4 = tk.Button(frm, text="Press 'J' to continue").grid(column=0, row=3)\
 
-window.bind("<Button>", handle_keypress)
-window.bind("<ButtonRelease>", handle_wait)
+window.bind("j", handle_keypress)
 
 window.mainloop()
-
 print()
 access = False
 while not access:
