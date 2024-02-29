@@ -73,7 +73,6 @@ def startUp():
         mydb.close()
         return None
 
-
 def logInFunction():  # Function to log into the program
     global mycursor
     global mydb
@@ -100,9 +99,19 @@ def logInFunction():  # Function to log into the program
             print("Welcome", Uname)
     return None
 
+main = Tk()
+frm = ttk.Frame(main, padding=25)
+frm.grid()
+introA = ttk.Label(frm, text="Hello and welcome to Omega Financial Services").grid(column=0, row=0)
+intorB = ttk.Label(frm, text="A company by RETIS Software Inc").grid(column=0, row=1)
+space = ttk.Label(frm, text="\n").grid(column=0, row=2)
+loading = ttk.Label(frm, text="Loading...").grid(column=0, row=3)
+time.sleep(5)
+loading.delete()
+text = ttk.Label(frm, text="Please log in:").grid(column=0, row=3)
+main.mainloop()
 
-print("Hello and welcome to Omega Financial Services")
-print("A company by RETIS Software Inc")
+
 print()
 startUp()
 access = False
