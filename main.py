@@ -16,6 +16,61 @@ from PyQt5.QtWidgets import QApplication, QLabel
 
   # FUTURE DAN!!!! Your next task is to migrate this entire program from Tkinter which is useless to PyQt5
 
+
+class income():
+    def __init__(self,name, type, amount, date, frequency):
+        print("What type of income is this?")
+        self.type = input("Employment - Salaried (Es), Employment - hourly (Eh),"
+                          "contractor (C), or Self-Employment (SE)")
+
+
+class expense():
+    def __init__(self):
+        answers = False
+        while not answers:
+            date = []
+            name = input("Bill name: ")
+            print("Per instance, what is the amount of the bill")
+            amount = input("GBP: ")
+            print("What frequency does this bill go out?")
+            frequency = input("Annually (A), Quarterly (Q), Monthly (M), Weekly (W): ")
+            if frequency.lower() != 'w':
+                print("What date does this bill go out on?")
+                day = input("1st - 28th (please only type the number): ")
+                answers2 = False
+                while not answers2:
+                    if frequency.lower() == 'a':
+                        print("What month does this bill go out?")
+                        month = input("1 - 12 (please only type the number); ")
+                        answers2 = True
+                    elif frequency.lower() == 'q':
+                        print("What month does the first bill of the year go out on?")
+                        month = input("1 - 12 (please only type the number); ")
+                        answers2 = True
+                    else:
+                        print("Please enter answers in the correct format")
+                date.append(month)
+                date.append(day)
+                recordAdder(name, amount, frequency, date)
+                print("Record added")
+                break
+                return None
+            elif frequency.lower() == 'w':
+                print("What day does this bill go out on?")
+                day = input("1 - 7 (please only type the number): ")
+                date.append(00)
+                date.append(day)
+                recordAdder(name, amount, frequency, date)
+                print("Record added")
+                break
+                return None
+            else:
+                print("Please enter answers in the correct format")
+
+
+    def recordAdder(self, name, amount, frequency, date):
+        print()
+
 def startUp():
     try:  # If the program can access the root user with defaults, then it will initiate 'first time' procedures.
         mydb = mysql.connector.connect(
