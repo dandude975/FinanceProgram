@@ -13,12 +13,11 @@ from tkinter import *
 from tkinter import ttk
 from PyQt5.QtWidgets import QApplication, QLabel
 
-
-  # FUTURE DAN!!!! Your next task is to migrate this entire program from Tkinter which is useless to PyQt5
+# FUTURE DAN!!!! Your next task is to migrate this entire program from Tkinter which is useless to PyQt5
 
 
 class income():
-    def __init__(self,name, type, amount, date, frequency):
+    def __init__(self):
         print("What type of income is this?")
         self.type = input("Employment - Salaried (Es), Employment - hourly (Eh),"
                           "contractor (C), or Self-Employment (SE)")
@@ -234,7 +233,12 @@ def startUp():
                          "Amount float,"
                          "Day int,"
                          "Month varchar(255));")  # Creating expense table
-        # mycursor.execute("CREATE TABLE FinanceRecords2023_24;")  # Creating database
+        mycursor.execute("CREATE TABLE Income ("
+                         "Name varchar(255),"
+                         "Type varchar(255),"
+                         "Amount float,"
+                         "Day int,"
+                         "Month varchar(255));")  # Creating income table
         mydb.close()
         logInFunction()
         return None
@@ -273,6 +277,9 @@ mycursor.execute("SHOW TABLES")
 for x in mycursor:
     print('-'+x[0])
 print()
+print("\n\nHOMESCREEN\n")
+print("Default year is 2023-24")
+print("Please choose either your expenses, or income for this year to view.")
 print("Please choose a year to view/modify or type 'back' to quit the program")
 table = input()
 mycursor.execute("SHOW TABLES")
