@@ -16,18 +16,6 @@ from PyQt5.QtWidgets import QApplication, QLabel
 
   # FUTURE DAN!!!! Your next task is to migrate this entire program from Tkinter which is useless to PyQt5
 
-
-def handle_keypress(event):
-    global frm
-    frm.destroy()
-    frm = ttk.Frame(window, padding=25)
-    frm.grid()
-    button1 = tk.Button(frm, text="Click here to view recover key. ", command=startUp()).grid(column=0, row=0)
-    label1 = tk.Label(frm, text="This is used for resetting this application.").grid(column=0, row=1)
-    label2 = tk.Label(frm, text="\n").grid(column=0, row=2)
-    label3 = tk.Label(frm, text="WARNING LOSS OF RECOVERY KEY WILL RESULT IN COMPLETE LOSS OF ACCESS").grid(column=0,row=3)
-
-
 def startUp():
     try:  # If the program can access the root user with defaults, then it will initiate 'first time' procedures.
         mydb = mysql.connector.connect(
@@ -47,14 +35,6 @@ def startUp():
         random.seed = (os.urandom(1024))
         secure = ''.join(random.choice(chars) for i in range(length))
 
-        root = Tk()
-        frm = ttk.Frame(root, padding=25)
-        frm.grid()
-        ttk.Label(frm, text="Recovery key: ").grid(column=0, row=0)
-        ttk.Label(frm, text=secure).grid(column=0, row=1)
-        ttk.Button(frm, text="I have written down the key", command=lambda:[root.destroy(),window.destroy()].grid(column=0, row=2))
-        root.mainloop()
-        window.mainloop()
         mycursor.execute("ALTER USER 'root'@'localhost' IDENTIFIED BY '" + secure + "';")
         mycursor.execute("ALTER USER 'admin'@'localhost' IDENTIFIED BY '" + secure + "';")
         mydb.close()
@@ -69,6 +49,11 @@ def startUp():
         mycursor.execute("CREATE ROLE CUSTOMER;")
         mycursor.execute("GRANT ALTER,CREATE,DELETE,DROP,INSERT,REFERENCES,RELOAD,SELECT,CREATE TABLESPACE,UPDATE on"
                          "*.* to 'CUSTOMER';")
+
+        print("Your recovery key is: "+secure)
+        print("Please make a note of this.")
+        print("LOSS OF RECOVERY KEY WILL RESULT IN COMPLETE LOSS OF DATA")
+        input("Press [enter] to continue")
         confirmed = False
         while not confirmed:
             print("Create an account\n")
@@ -113,22 +98,12 @@ def logInFunction():  # Function to log into the program
             print("Welcome", Uname)
     return None
 
-window = Tk()
-window.title("Omega Financial Services")
-frm = ttk.Frame(window, padding=25)
-frm.grid()
-label1 = tk.Label(frm, text="Hello and welcome to Omega Financial Services").grid(column=0, row=0)
-label2 = tk.Label(frm, text="A company by RETIS Software Inc").grid(column=0, row=1)
-label3 = tk.Label(frm, text="\n").grid(column=0, row=2)
-label4 = tk.Button(frm, text="Press 'J' to continue").grid(column=0, row=3)\
+# Program starts here
 
-window.bind("j", handle_keypress)
-
-window.mainloop()
+startUp()
 print()
 access = False
 while not access:
-    print("Please log in:")
     logInFunction()
     access = True
 
@@ -148,8 +123,8 @@ for x in mycursor:
     elif table.upper() == "BACK":
         Functions.logOff()
         exit()
-print("Create table?")
-create = input("y/n ")
-if create == "y":
+# print("Create table?")
+# create = input("y/n ")
+"""if create == "y":
     mycursor.fetchall()
-    createTable(table)
+    createTable(table)"""
