@@ -448,13 +448,26 @@ def fetch(table):
         result = mycursor.fetchall()
         if table == "income":
             for i in result:
-                print("Income name:",i[0], "| Income type:",i[1], "| Instance amount:",i[2],
+                print("Income name:",i[0], "| Income type:",incomeTypeTranslator(i[1]), "| Instance amount:",i[2], "GBP",
                       "| Instance date: "+str(i[3])+"/"+str(i[4]))
         elif table == "expenses":
                 for i in result:
-                    print("Income name:", i[0], "| Instance amount:", i[1],
+                    print("Income name:", i[0], "| Instance amount:", i[1], "GBP",
                           "| Instance date: " + str(i[2]) + "/" + str(i[3]))
         return None
+
+
+def incomeTypeTranslator(type):
+    if type == "es":
+        return("Salaried Employment")
+    elif type == "eh":
+        return("Hourly Employment")
+    elif type == 'b':
+        return("Benifits")
+    elif type == 'c':
+        return("Self-Employment/Contractor")
+    elif type == 'd':
+        return("Dividend Payout")
 
 
 # Program starts here
