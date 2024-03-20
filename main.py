@@ -116,8 +116,6 @@ class income():
                 data = (str(name), str(type), str(amount), str(date[1]), str(date[0]))
                 mycursor.execute(add, data)
                 mydb.commit()
-            date[0] = date[0] + 1
-            print(" - ", self.dateDisplay(date))
             print("Total per year: ", float(amount)*12, "GBP")
         elif frequency == 'w':
             print("Average total per month:")
@@ -131,8 +129,6 @@ class income():
                 data = (str(name), str(type), str(float(amount*4.33)), str(date[1]), str(date[0]))
                 mycursor.execute(add, data)
                 mydb.commit()
-            date[0] = date[0] + 1
-            print(" - ", self.dateDisplay(date), str(float(amount) * 4.33), "GBP")
             print("Total per year: ", float(amount)*52, "GBP")
 
     def dateDisplay(self, date):
@@ -278,8 +274,6 @@ class expense():
                 data = (str(name), str(amount), str(date[1]), str(date[0]))
                 mycursor.execute(add, data)
                 mydb.commit()
-            date[0] = date[0] + 1
-            print(" - ", self.dateDisplay(date))
             print("Total per year: ", float(amount)*12, "GBP")
         elif frequency == 'w':
             print("Average total per month:")
@@ -293,8 +287,6 @@ class expense():
                 data = (str(name), str(float(amount) * 4.33), str(date[1]), str(date[0]))
                 mycursor.execute(add, data)
                 mydb.commit()
-            date[0] = date[0] + 1
-            print(" - ", self.dateDisplay(date), str(float(amount) * 4.33), "GBP")
             print("Total per year: ", float(amount)*52, "GBP")
 
     def dateDisplay(self, date):
