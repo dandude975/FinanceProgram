@@ -449,11 +449,11 @@ def fetch(table):
         if table == "income":
             for i in result:
                 print("Income name:",i[0], "| Income type:",i[1], "| Instance amount:",i[2],
-                      "| Instance date: "+str(i[4])+"/"+str(i[3]))
+                      "| Instance date: "+str(i[3])+"/"+str(i[4]))
         elif table == "expenses":
                 for i in result:
                     print("Income name:", i[0], "| Instance amount:", i[1],
-                          "| Instance date: " + str(i[3]) + "/" + str(i[2]))
+                          "| Instance date: " + str(i[2]) + "/" + str(i[3]))
         return None
 
 
