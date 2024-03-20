@@ -446,14 +446,19 @@ def fetch(table):
         return None
     else:
         result = mycursor.fetchall()
+        total = 0
         if table == "income":
             for i in result:
                 print("Income name:",i[0], "| Income type:",incomeTypeTranslator(i[1]), "| Instance amount:",i[2], "GBP",
                       "| Instance date: "+str(i[3])+"/"+str(i[4]))
+                total = total + i[2]
+            print("Total income amount: " + str(total))
         elif table == "expenses":
                 for i in result:
                     print("Income name:", i[0], "| Instance amount:", i[1], "GBP",
                           "| Instance date: " + str(i[2]) + "/" + str(i[3]))
+                    total = total + i[1]
+                print("Total income amount: " + str(total))
         return None
 
 
