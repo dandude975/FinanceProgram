@@ -499,7 +499,7 @@ while True:
         selection = input()
         if selection.lower() == 'i':
             income()
-        elif selection.lower() == 'e':
+        elif selection.lower() == 'b':
             expense()
     else:
         fetch(selection.lower())
