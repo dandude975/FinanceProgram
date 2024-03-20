@@ -47,9 +47,9 @@ class income():
                         answers2 = True
                     elif frequency.lower() == 'm':
                         if int(day) >= 6:
-                            date.append(4)
+                            date[0] = 4
                         if int(day) < 6:
-                            date.append(5)
+                            date[0] = 5
                         answers2 = True
                     elif frequency.lower() == 'w':
                         date.append(00)
@@ -109,10 +109,10 @@ class income():
             print("Total per year: ", float(amount)*4, "GBP")
         elif frequency == 'm':
             print(" - ", self.dateDisplay(date))
-            for i in range(0,11):
+            for i in range(0, 12):
                 date[0] = date[0] + 1
                 print(" - ", self.dateDisplay(date))
-                add = ("INSERT INTO Income (Name, Type, Amount, Day, Month)"
+                add = ("INSERT INTO Expenses (Name, Type, Amount, Day, Month)"
                        "VALUES (%s, %s, %s, %s, %s)")
                 data = (str(name), str(type), str(amount), str(date[1]), str(date[0]))
                 mycursor.execute(add, data)
@@ -205,7 +205,10 @@ class expense():
                         date.append(int(month))
                         answers2 = True
                     elif frequency.lower() == 'm':
-                        date.append(4)
+                        if int(day) >= 6:
+                            date[0] = 4
+                        if int(day) < 6:
+                            date[0] = 5
                         answers2 = True
                     elif frequency.lower() == 'w':
                         date.append(00)
