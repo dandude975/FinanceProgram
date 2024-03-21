@@ -99,6 +99,8 @@ class income():
         elif frequency == 'q':
             print(" - ", self.dateDisplay(date))
             for i in range(0,3):
+                while date[0] < 4 and date[1] < 6:
+                    date[0] = date[0] = 3
                 date[0] = date[0] + 3
                 print(" - ", self.dateDisplay(date))
                 add = ("INSERT INTO Income (Name, Type, Amount, Day, Month)"
@@ -474,6 +476,74 @@ def incomeTypeTranslator(type):
         return("Dividend Payout")
 
 
+def summaryCalculator():
+    income1257L = 0
+    incomeNON = 0
+    incomeDIV = 0
+    expenses = 0
+    employmentTypes = ["eh", "es", "b", "c", "d"]
+    for i in employmentTypes:
+        try:
+            query = ("SELECT * FROM income WHERE Type = '" + i + "'")
+            mycursor.execute(query)
+            result = mycursor.fetchall()
+        except:
+            print("No", incomeTypeTranslator(i))
+        else:
+            for j in result:
+                if i == "es" or i == "eh" or i == "c":
+                    income1257L = income1257L + int(j[2])
+                elif i == 'b':
+                    incomeNON = incomeNON + int(j[2])
+                elif i == 'd':
+                    incomeDIV = incomeDIV + int(j[2])
+    try:
+        query = ("SELECT * FROM expenses")
+        mycursor.execute(query)
+        result = mycursor.fetchall()
+    except:
+        print("No expenses")
+    else:
+        for i in result:
+            expenses = expenses + int(i[1])
+    print()
+    print("2024 Summary:")
+    print("Income: £" + str(income1257L + incomeNON + incomeDIV))
+    print("Expenses: £" + str(expenses))
+    taxCalculator(income1257L, incomeDIV)
+    print()
+
+
+def taxCalculator(income1257L, incomeDIV):
+    if income1257L >= 12570 and income1257L < 50270:
+        InTax1257L = (income1257L - 12570) * 0.2
+        print("Income Tax: £" + str(InTax1257L))
+        NICTax1257L = (income1257L - 12570) * 0.12
+        print("NIC Tax: £" + str(NICTax1257L))
+    elif income1257L >= 50270 and income1257L < 125140:
+        InTax1257L = (income1257L - 50270) * 0.4 + 7540
+        print("Income Tax: £" + str(InTax1257L))
+        NICTax1257L = (income1257L - 50270) * 0.12
+        print("NIC Tax: £" + str(NICTax1257L))
+    elif income1257L >= 125140:
+        InTax1257L = (income1257L - 125140) * 0.45 + 10054 + 29948
+        print("Income Tax: £" + str(InTax1257L))
+        NICTax1257L = (income1257L - 50270) * 0.12
+        print("NIC Tax: £" + str(NICTax1257L))
+    else:
+        InTax1257L = 0
+        print("Income Tax: £" + str(InTax1257L))
+        NICTax1257L = 0
+        print("NIC Tax: £" + str(NICTax1257L))
+    if incomeDIV > 1000:
+        DivTax = (incomeDIV - 1000) * 0.2
+        print("Dividend Tax: £" + str(DivTax))
+    else:
+        DivTax = 0
+        print("Dividend Tax: £" + str(DivTax))
+
+
+
 # Program starts here
 
 startUp()
@@ -484,6 +554,7 @@ while True:
     print("Default year is 2023-24")
     print("Please type either  'expenses', or 'income' for this year to view.")
     print("Please choose a year to view/modify or type 'back' to quit the program")
+    summaryCalculator()
     mycursor.execute("SHOW TABLES")
     for x in mycursor:
         print('-'+x[0])
