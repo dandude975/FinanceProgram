@@ -476,7 +476,7 @@ def incomeTypeTranslator(type):
         return("Dividend Payout")
 
 
-def summaryCalculator():
+def summaryCalculatorPA():
     income1257L = 0
     incomeNON = 0
     incomeDIV = 0
@@ -514,6 +514,82 @@ def summaryCalculator():
     print()
 
 
+def summaryCalculatorPM():
+    print("2024 Summary (Monthly):")
+    list_income1257L = [0,0,0,0,0,0,0,0,0,0,0,0]
+    list_incomeNON = [0,0,0,0,0,0,0,0,0,0,0,0]
+    list_incomeDIV = [0,0,0,0,0,0,0,0,0,0,0,0]
+    list_expenses = [0,0,0,0,0,0,0,0,0,0,0,0]
+    employmentTypes = ["eh", "es", "b", "c", "d"]
+    print("Income:")
+    for i in employmentTypes:
+        try:
+            query = ("SELECT * FROM income WHERE Type = '" + i + "'")
+            mycursor.execute(query)
+            result = mycursor.fetchall()
+        except:
+            print("No", incomeTypeTranslator(i))
+        else:
+            count = 4
+            for n in range(0, 12):
+                income1257L = 0
+                incomeNON = 0
+                incomeDIV = 0
+                for j in result:
+                    if int(j[4]) == count:
+                        if i == "es" or i == "eh" or i == "c":
+                            income1257L = income1257L + int(j[2])
+                        elif i == 'b':
+                            incomeNON = incomeNON + int(j[2])
+                        elif i == 'd':
+                            incomeDIV = incomeDIV + int(j[2])
+                list_income1257L[n] = list_income1257L[n] + income1257L
+                list_incomeNON[n] = list_incomeNON[n] + incomeNON
+                list_incomeDIV[n] = list_incomeDIV[n] + incomeDIV
+                count = count + 1
+    print(list_income1257L)
+    print(list_incomeNON)
+    print(list_incomeDIV)
+    if int(j[4]) != 0 and j[4] != None:
+        count = 4
+        for i in range(0,12):
+            if count > 12:
+                count = count - 12
+            print(str(NumToMth(int(count))) + ": £" + str(int(list_income1257L[count-3]) + int(list_incomeNON[count-3])
+                                                          + int(list_incomeDIV[count-3])))
+            count = count + 1
+    print("\nExpenses:")
+    try:
+        query = ("SELECT * FROM expenses")
+        mycursor.execute(query)
+        result = mycursor.fetchall()
+    except:
+        print("No expenses")
+    else:
+        count = 4
+        for n in range(0, 12):
+            expenses = 0
+            for i in result:
+                if int(j[4]) == count:
+                    list_expenses[n] = list_expenses[n] + int(i[2])
+            count = count + 1
+        count = 4
+        for i in range(0,12):
+            if count > 12:
+                count = count - 12
+            print(str(NumToMth(count)) + ": £" + str(list_expenses[count-3]))
+            count = count + 1
+    income1257L = 0
+    incomeDIV = 0
+    for i in list_income1257L:
+        income1257L = int(income1257L) + int(i)
+    for i in list_incomeDIV:
+        incomeDIV = int(incomeDIV) + int(i)
+    taxCalculator(income1257L, incomeDIV)
+    print()
+
+
+
 def taxCalculator(income1257L, incomeDIV):
     if income1257L >= 12570 and income1257L < 50270:
         InTax1257L = (income1257L - 12570) * 0.2
@@ -543,6 +619,60 @@ def taxCalculator(income1257L, incomeDIV):
         print("Dividend Tax: £" + str(DivTax))
 
 
+def MthToNum(month):
+    if month == "January":
+        return 1
+    elif month == "February":
+        return 2
+    elif month == "March":
+        return 3
+    elif month == "April":
+        return 4
+    elif month == "May":
+        return 5
+    elif month == "June":
+        return 6
+    elif month == "July":
+        return 7
+    elif month == "August":
+        return 8
+    elif month == "September":
+        return 9
+    elif month == "October":
+        return 10
+    elif month == "November":
+        return 11
+    elif month == "December":
+        return 12
+
+
+def NumToMth(month):
+    if month == 1:
+        return "January"
+    elif month == 2:
+        return "February"
+    elif month == 3:
+        return "March"
+    elif month == 4:
+        return "April"
+    elif month == 5:
+        return "May"
+    elif month == 6:
+        return "June"
+    elif month == 7:
+        return "July"
+    elif month == 8:
+        return "August"
+    elif month == 9:
+        return "September"
+    elif month == 10:
+        return "October"
+    elif month == 11:
+        return "November"
+    elif month == 12:
+        return "December"
+
+
 
 # Program starts here
 
@@ -554,7 +684,8 @@ while True:
     print("Default year is 2023-24")
     print("Please type either  'expenses', or 'income' for this year to view.")
     print("Please choose a year to view/modify or type 'back' to quit the program")
-    summaryCalculator()
+    summaryCalculatorPA()
+    summaryCalculatorPM()
     mycursor.execute("SHOW TABLES")
     for x in mycursor:
         print('-'+x[0])
