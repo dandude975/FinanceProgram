@@ -507,7 +507,7 @@ def summaryCalculatorPA():
         for i in result:
             expenses = expenses + int(i[1])
     print()
-    print("2024 Summary:")
+    print("2024 Summary (annually):")
     print("Income: £" + str(income1257L + incomeNON + incomeDIV))
     print("Expenses: £" + str(expenses))
     taxCalculator(income1257L, incomeDIV)
@@ -532,6 +532,8 @@ def summaryCalculatorPM():
         else:
             count = 4
             for n in range(0, 12):
+                if count > 12:
+                    count = count - 12
                 income1257L = 0
                 incomeNON = 0
                 incomeDIV = 0
@@ -547,9 +549,6 @@ def summaryCalculatorPM():
                 list_incomeNON[n] = list_incomeNON[n] + incomeNON
                 list_incomeDIV[n] = list_incomeDIV[n] + incomeDIV
                 count = count + 1
-    print(list_income1257L)
-    print(list_incomeNON)
-    print(list_incomeDIV)
     if int(j[4]) != 0 and j[4] != None:
         count = 4
         for i in range(0,12):
@@ -568,26 +567,20 @@ def summaryCalculatorPM():
     else:
         count = 4
         for n in range(0, 12):
+            if count > 12:
+                count = count - 12
             expenses = 0
             for i in result:
-                if int(j[4]) == count:
-                    list_expenses[n] = list_expenses[n] + int(i[2])
+                if int(i[3]) == count:
+                    list_expenses[n] = list_expenses[n] + int(i[1])
             count = count + 1
         count = 4
+        print(list_expenses)
         for i in range(0,12):
             if count > 12:
                 count = count - 12
             print(str(NumToMth(count)) + ": £" + str(list_expenses[count-3]))
             count = count + 1
-    income1257L = 0
-    incomeDIV = 0
-    for i in list_income1257L:
-        income1257L = int(income1257L) + int(i)
-    for i in list_incomeDIV:
-        incomeDIV = int(incomeDIV) + int(i)
-    taxCalculator(income1257L, incomeDIV)
-    print()
-
 
 
 def taxCalculator(income1257L, incomeDIV):
@@ -684,8 +677,9 @@ while True:
     print("Default year is 2023-24")
     print("Please type either  'expenses', or 'income' for this year to view.")
     print("Please choose a year to view/modify or type 'back' to quit the program")
-    summaryCalculatorPA()
     summaryCalculatorPM()
+    summaryCalculatorPA()
+    print()
     mycursor.execute("SHOW TABLES")
     for x in mycursor:
         print('-'+x[0])
